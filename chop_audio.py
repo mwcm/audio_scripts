@@ -6,9 +6,13 @@ import argparse
 import os
 from madmom.features.downbeats import RNNDownBeatProcessor, DBNDownBeatTrackingProcessor
 
-def split_by_downbeats(audio_file, output_dir, prefix="section", bars_per_section=4):
+def split_by_downbeats(audio_file, output_base_dir, prefix="section", bars_per_section=4):
     """Split audio into sections based on downbeats (groups of bars)"""
     print("Detecting downbeats with madmom...")
+    
+    # Create subdirectory named after the file
+    output_dir = os.path.join(output_base_dir, prefix)
+    os.makedirs(output_dir, exist_ok=True)
     
     # Use madmom's downbeat detector
     proc = DBNDownBeatTrackingProcessor(beats_per_bar=[3, 4], fps=100)
@@ -49,9 +53,13 @@ def split_by_downbeats(audio_file, output_dir, prefix="section", bars_per_sectio
         duration = len(last_section) / sr
         print(f"Exported {output_file} (duration: {duration:.2f}s)")
 
-def split_by_bars(audio_file, output_dir, prefix="bar"):
+def split_by_bars(audio_file, output_base_dir, prefix="bar"):
     """Split audio into individual bars using madmom's downbeat detection"""
     print("Detecting downbeats with madmom...")
+    
+    # Create subdirectory named after the file
+    output_dir = os.path.join(output_base_dir, prefix)
+    os.makedirs(output_dir, exist_ok=True)
     
     # Use madmom's downbeat detector
     proc = DBNDownBeatTrackingProcessor(beats_per_bar=[3, 4], fps=100)
